@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Dashboard de Ações</h1>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Ticker</th>
+            <th>Preço</th>
+            <th>Variação</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for acao in acoes %}
+        <tr>
+            <td>{{ acao.ticker }}</td>
+            <td>R$ {{ "%.2f"|format(acao.preco) }}</td>
+            <td>{{ acao.variacao }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
