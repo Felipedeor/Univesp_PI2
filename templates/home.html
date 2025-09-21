@@ -1,19 +1,25 @@
-<!doctype html>
-<html lang="pt-BR">
-  <head>
-    <meta charset="utf-8">
-    <title>Projeto II Univesp</title>
-  </head>
-  <body>
-    <h1>Olá, </h1>
-    <p>Este é o Projeto II criado pelos alunos da Univesp. Neste projeto iremos abordar uma aplicação de acompanhamento de investimentos.</p>
-  </body>
-  <body>
-    <h1>
-    Primeiramente, faça o seu login: <a href="{{ url_for('login') }}">Faça login</a>
-    </h1>
-    <h1> Não possui conta? faça seu cadastro: <a href="{{ url_for('register') }}">Cadastrar-se</a>
-    </h1>
+{% extends "base.html" %}
 
-  </body>
-</html>
+{% block title %}Projeto II - Univesp{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
+  <div class="card shadow p-4" style="max-width: 600px; width: 100%;">
+    <div class="card-body text-center">
+      <h1 class="card-title mb-3">Olá!</h1>
+      <p class="card-text mb-4">
+        Este é o Projeto II criado pelos alunos da Univesp.
+        Nesta aplicação, vamos acompanhar investimentos.
+      </p>
+
+      <div class="d-grid gap-2">
+        <!-- Botão de login -->
+        <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Fazer login</a>
+
+        <!-- Botão de cadastro -->
+        <a href="{{ url_for('register') }}" class="btn btn-outline-secondary btn-lg">Cadastrar-se</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
