@@ -1,6 +1,7 @@
 from extensions import db  # usa db de extensions, não de app
+from flask_login import UserMixin
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.Text, unique=True, nullable=False)
     email = db.Column(db.Text, unique=True, nullable=False)
@@ -16,7 +17,10 @@ class User(db.Model):
 
 class Investimento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(100), nullable=False)
-    valor_compra = db.Column(db.Numeric(12,2), nullable=False)
-    cotacao_atual = db.Column(db.Numeric(12,2), nullable=False)
-    saldo = db.Column(db.Numeric(12,2), nullable=False)
+    nome = db.Column(db.String(100))
+    valor_compra = db.Column(db.Float)
+    cotacao_atual = db.Column(db.Float)
+    saldo = db.Column(db.Float)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    user = db.relationship('User', backref=db.backref('investimentos', lazy=True))

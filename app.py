@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 import plotly.express as px
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
 # importa o db de extensions, não de models
 from extensions import db
@@ -11,6 +12,17 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://devuser:devsenha@localhost
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)  # inicializa SQLAlchemy com app
+
+app.secret_key = 'univesppi2'
+
+# --------------------LOGIN---------------------
+
+login_manager = LoginManager(app)
+login_manager.login_view = "login"  # se usuário não estiver logado redireciona para login
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 # -------------------- ROTAS --------------------
 
@@ -45,18 +57,25 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        usuario = request.form["usuario"]
-        senha = request.form["senha"]
-
-        user = User.query.filter_by(username=usuario).first()
-
-        if user and user.check_password(senha):
+        username = request.form["usuario"]
+        password = request.form["senha"]
+        user = User.query.filter_by(username=username).first()
+        if user and check_password_hash(user.password, password):
+            login_user(user)
             return redirect(url_for("dashboard"))
         else:
-            return render_template("login.html", erro="Usuário ou senha incorretos")
+            flash("Usuário ou senha inválidos")
     return render_template("login.html")
 
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
+
+
 @app.route("/dashboard", methods=["GET", "POST"])
+@login_required
 def dashboard():
     if request.method == "POST":
         nome = request.form["nome"]
@@ -64,23 +83,27 @@ def dashboard():
         cotacao_atual = float(request.form["cotacao_atual"])
         saldo = cotacao_atual - valor_compra
 
-        novo = Investimento(nome=nome, valor_compra=valor_compra,
-                            cotacao_atual=cotacao_atual, saldo=saldo)
+        novo = Investimento(
+            nome=nome,
+            valor_compra=valor_compra,
+            cotacao_atual=cotacao_atual,
+            saldo=saldo,
+            user_id=current_user.id  # vincula investimento ao usuário logado
+        )
         db.session.add(novo)
         db.session.commit()
         return redirect(url_for("dashboard"))
 
-    investimentos = Investimento.query.all()
+    # Pega apenas os investimentos do usuário logado
+    investimentos = Investimento.query.filter_by(user_id=current_user.id).all()
 
     nomes = [i.nome for i in investimentos]
     saldos = [float(i.saldo) for i in investimentos]
 
-        # Só cria o gráfico se houver dados
-    if nomes and saldos:
+    if investimentos:
         fig = px.bar(x=nomes, y=saldos, title="Saldo dos Investimentos")
         grafico_html = fig.to_html(full_html=False)
     else:
-        # Mensagem amigável caso não haja dados
         grafico_html = "<p>Nenhum investimento cadastrado ainda.</p>"
 
     return render_template("dashboardv2.html", investimentos=investimentos, grafico_html=grafico_html)
