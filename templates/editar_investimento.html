@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Investimento{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Editar Investimento</h2>
+  <form method="POST">
+    <div class="mb-3">
+      <label for="nome" class="form-label">Nome</label>
+      <input type="text" class="form-control" id="nome" name="nome" value="{{ investimento.nome }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="valor_compra" class="form-label">Valor de Compra</label>
+      <input type="number" step="0.01" class="form-control" id="valor_compra" name="valor_compra" value="{{ investimento.valor_compra }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="cotacao_atual" class="form-label">Cotação Atual</label>
+      <input type="number" step="0.01" class="form-control" id="cotacao_atual" name="cotacao_atual" value="{{ investimento.cotacao_atual }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

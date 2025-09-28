@@ -82,6 +82,7 @@
             <th>Valor de Compra</th>
             <th>Cotação Atual</th>
             <th>Saldo</th>
+            <th>Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -91,6 +92,11 @@
             <td>{{ i.valor_compra }}</td>
             <td>{{ i.cotacao_atual }}</td>
             <td>{{ i.saldo }}</td>
+            <td>
+            <!-- Botão Editar -->
+            <a href="{{ url_for('editar_investimento', investimento_id=i.id) }}" class="btn btn-sm btn-warning">Editar</a>
+            <!-- Botão Remover -->
+            <a href="{{ url_for('remover_investimento', investimento_id=i.id) }}" class="btn btn-sm btn-danger">Remover</a></td>
           </tr>
           {% endfor %}
           {% if investimentos|length == 0 %}
@@ -107,7 +113,7 @@
   </main>
 </div>
 
-<!-- Modal Adicionar Investimento -->
+<!-- modal -->
 <div class="modal fade" id="modalInvestimento" tabindex="-1">
   <div class="modal-dialog">
     <form method="POST" class="modal-content">
@@ -117,7 +123,8 @@
       </div>
       <div class="modal-body">
         <input type="text" name="nome" class="form-control mb-2" placeholder="Nome do investimento" required>
-        <input type="number" step="0.01" name="valor_compra" class="form-control mb-2" placeholder="Valor de compra" required>
+        <input type="number" step="0.01" name="quantidade" class="form-control mb-2" placeholder="Quantidade" required>
+        <input type="number" step="0.01" name="valor_compra" class="form-control mb-2" placeholder="Valor pago" required>
         <input type="number" step="0.01" name="cotacao_atual" class="form-control mb-2" placeholder="Cotação atual" required>
       </div>
       <div class="modal-footer">
@@ -126,6 +133,7 @@
     </form>
   </div>
 </div>
+
 {% endblock %}
 
 {% block extra_js %}
