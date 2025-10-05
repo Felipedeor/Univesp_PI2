@@ -17,15 +17,13 @@ class User(UserMixin, db.Model):
 
 class Investimento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    ticker = db.Column(db.Text)
-    nome = db.Column(db.String(100))
-    valor_compra = db.Column(db.Float)
-    cotacao_atual = db.Column(db.Float)
-    quantidade = db.Column(db.Float)
-    valor_pago = db.Column(db.Float)
-    saldo = db.Column(db.Float)
-    lucro_prejuizo = db.Column(db.Float)  # nova coluna
+    ticker = db.Column(db.String(10), nullable=False)
+    nome = db.Column(db.String(100), nullable=False)
+    quantidade = db.Column(db.Integer, nullable=False)
+    valor_pago = db.Column(db.Float, nullable=False)
+    cotacao_atual = db.Column(db.Float, nullable=False)
+    saldo = db.Column(db.Float, nullable=False)
+    lucro_prejuizo = db.Column(db.Float, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     user = db.relationship('User', backref=db.backref('investimentos', lazy=True))
-

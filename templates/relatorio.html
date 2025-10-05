@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório – Minha App{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <h1 class="h2 mb-3">Relatório de Investimentos</h1>
+    <pre>{{ relatorio }}</pre>
+    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary mt-3">Voltar ao Dashboard</a>
+</div>
+{% endblock %}
